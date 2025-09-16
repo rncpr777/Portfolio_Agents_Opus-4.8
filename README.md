@@ -1,4 +1,5 @@
 # Agentic Portfolio Construction: A Multi-Agent Architecture for LLM-Driven Financial Asset Allocation
+# Accepted at The 3rd International Conference on Foundation and Large Language Models (FLLM2025)
 
 This repository contains the implementation of a LangGraph-based multi-agent framework for personalized investment portfolio construction. The system integrates large language models (LLMs), financial data APIs, and modular agent workflows to build, evaluate, and report tailored investment strategies. It uses Tavily for sentiment and market news, and Yahoo! Finance to fetch the latest market data.
 
@@ -80,3 +81,16 @@ python -m portfolio_agents
 ```
 
 You will be prompted to enter your investment amount, time horizon, risk tolerance, and any preferences. Outputs (report, metrics, visualizations) will be saved in a timestamped folder under `output/`.
+
+For Citations:
+@inproceedings{Hajaghie2025FLLM,
+  title     = {Agentic Portfolio Construction: A Multi-Agent Architecture for LLM-Driven Financial Asset Allocation},
+  author    = {Ahmadreza Hajaghie and Ruppa K. Thulasiram},
+  booktitle = {Proceedings of the 3rd International Conference on Foundation and Large Language Models (FLLM 2025)},
+  year      = {2025},
+  address   = {Vienna, Austria},
+  month     = {Nov.},
+  note      = {To appear}
+}
+
+
