@@ -8,7 +8,7 @@ import json
 from typing import Dict, List, Optional, TypedDict
 import pandas as pd
 from pydantic.v1 import BaseModel, Field
-from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
 from langchain_community.tools.tavily_search.tool import TavilySearchResults
@@ -17,7 +17,7 @@ from langgraph.graph.message import add_messages
 from .metrics import calculate_metrics_node as metrics_node, validate_portfolio_calculations, calculate_financial_metrics
 from .report import structure_output_report
 from .data import fetch_financial_data, fetch_market_news as fetch_news, fetch_data_node as data_node
-from .config import BENCHMARK_TICKER, OPENAI_API_KEY, TAVILY_API_KEY
+from .config import BENCHMARK_TICKER, ANTHROPIC_API_KEY, TAVILY_API_KEY
 
 #State definition
 class PortfolioGenerationState(TypedDict, total=False):
@@ -35,7 +35,7 @@ class PortfolioGenerationState(TypedDict, total=False):
     step: Optional[str]
 
 #LLM and tool initialization
-llm = ChatOpenAI(model="gpt-4o", temperature=0.1, max_retries=2)
+llm = ChatAnthropic(model="claude-opus-4-8", max_retries=2)
 tavily_tool = TavilySearchResults(max_results=3) if TAVILY_API_KEY else None
 
 #Node: Parse User Request
@@ -153,7 +153,14 @@ def propose_portfolio_node(state):
             elif all(isinstance(k, str) and isinstance(v, (float, int)) for k, v in proposal.items()):
                 proposed_portfolio = proposal
             else:
-                raise ValueError("LLM output is a dictionary but not in the expected portfolio structure (missing 'portfolio_allocation' key or invalid format).")
+                # Claude sometimes nests it differently, try to find allocation inside any dict value
+                for v in proposal.values():
+                    if isinstance(v, dict) and all(isinstance(k, str) and isinstance(val, (float, int)) for k, val in v.items()):
+                        proposed_portfolio = v
+                        llm_reasoning = proposal.get('reasoning')
+                        break
+                if proposed_portfolio is None:
+                    raise ValueError("LLM output is a dictionary but not in the expected portfolio structure (missing 'portfolio_allocation' key or invalid format).")
         else:
             raise TypeError(f"LLM output was not a dictionary, received type: {type(proposal)}")
         proposed_portfolio = {k.upper(): v for k,v in proposed_portfolio.items()}

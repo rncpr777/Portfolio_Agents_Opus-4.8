@@ -2,6 +2,7 @@
 langgraph
 langchain
 langchain-openai
+langchain-anthropic
 langchain-community
 pydantic
 python-dotenv

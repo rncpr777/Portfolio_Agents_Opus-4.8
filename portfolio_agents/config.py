@@ -14,6 +14,7 @@ BENCHMARK_TICKER = "^GSPC"
 DEFAULT_PERIOD = "5y"
 
 # Fetch API keys (if needed elsewhere)
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 

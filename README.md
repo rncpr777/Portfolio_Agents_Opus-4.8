@@ -43,6 +43,7 @@ The system is powered by [LangGraph](https://github.com/langchain-ai/langgraph),
 - Python 3.10+
 - langgraph
 - langchain
+- langchain-anthropic
 - langchain-openai
 - langchain-community
 - pydantic
